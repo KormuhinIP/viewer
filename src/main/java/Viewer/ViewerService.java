@@ -5,13 +5,19 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
+import java.util.ArrayList;
 
 @Service
 public class ViewerService {
 
-     public String getDate(String link, String query)  {
-         String date="";
+    private ArrayList<String> mesageNull=new ArrayList<String>();
+    public ArrayList<String> getMesageNull() {
+        return mesageNull;
+    }
 
+
+     public String getDate(String link, String query)  {
+        String date="";
          Document document= null;
          try {
              document = Jsoup.connect(link).get();
@@ -21,9 +27,9 @@ public class ViewerService {
         Element element=document.select(query).first();
          if (element!=null){
              date=element.text();
-         }else
-             System.out.println("Элемент не найден. Смотри сайт.....");
-
+         }else{
+             mesageNull.add(link);
+         }
          return date;
      }
 

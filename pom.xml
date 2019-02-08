@@ -4,13 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>viewer</groupId>
-    <artifactId>viewer</artifactId>
-    <version>1.0</version>
 
     <groupId>org.springframework</groupId>
-    <artifactId>gs-scheduling-tasks</artifactId>
-    <version>0.1.0</version>
+    <artifactId>viewer</artifactId>
+    <version>1.0</version>
 
 
     <parent>
@@ -27,6 +24,20 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>22.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+            <version>1.6.2</version>
         </dependency>
         <dependency>
             <groupId>org.jsoup</groupId>

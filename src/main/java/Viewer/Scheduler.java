@@ -1,15 +1,13 @@
 package Viewer;
 
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-
-import java.sql.SQLOutput;
-import java.util.ArrayList;
-import java.util.Map;
+import java.util.*;
 
 
 @Service
@@ -20,28 +18,41 @@ private Links links ;
     @Autowired
     private ViewerService viewerService;
 
-    ArrayList<String>oldDate=new ArrayList<>();
-    ArrayList<String>newDate=new ArrayList<>();
+    HashMap<String, String> oldData = new HashMap<String, String>();
+    HashMap<String, String> newData = new HashMap<String, String>();
 
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        for (Map.Entry e : links.list().entrySet()){                                  //add data to the map. Data obtained from links. (At startup)
+            String[] link=e.getKey().toString().split(" ");
+            oldData.put(e.getKey().toString(),viewerService.getDate(link[1],e.getValue().toString()));
+        }
+    }
 
-        for(Map.Entry e : links.list().entrySet()){
-            oldDate.add(viewerService.getDate((String) e.getKey(),(String)e.getValue()));
+
+  @Scheduled(cron = "*/30 * * * * *")   //cron = "0 00 00 */7 * *"
+    public void updateSite() {
+        newData.clear();
+        String mesage="";
+      String mesageNull="";
+        for(Map.Entry e : links.list().entrySet()){                                     //add data to the map. Data obtained from links. (after 7 days)
+            String[] link=e.getKey().toString().split(" ");
+            newData.put(e.getKey().toString(),viewerService.getDate(link[1], e.getValue().toString()));
+        }
+        for (String link: oldData.keySet()){                                           //looking for changes (compare two HashMaps)
+                    if (!oldData.get(link).equals(newData.get(link)))
+                       mesage=mesage+"\n"+ link;
+        }
+        if (viewerService.getMesageNull().size()>0){                           //check if there were any refusals to receive data from the link
+            for (String m: viewerService.getMesageNull()) {
+                mesageNull=mesageNull+"\n"+m;
+            }
+            mesageNull="The following links failed to retrieve the value: "+mesageNull;
+        }
+        if (!mesage.equals("")){                                              //check if there were changes on the links
+            new EmailUtil().sendMessageAlarm("Hi! Could you look these links. I think, these links have changed."+mesage+"\n"+mesageNull);}
+        else new EmailUtil().sendMessageAlarm("Hi! The links are not changed"+"\n"+mesageNull);
+       oldData=newData;
        }
-    }
-
-    @Scheduled(cron = "*/10 * * * * *")   //cron = "0 00 00 */7 * *"
-    public void updateHashCode() {
-        newDate.clear();
-        for(Map.Entry e : links.list().entrySet()){
-        newDate.add(viewerService.getDate((String) e.getKey(), (String)e.getValue()));
-        }
-        for (int i = 0; i < newDate.size() ; i++) {
-            System.out.println(oldDate.get(i)+"     "+newDate.get(i));
-                       if(newDate.get(i).equals(oldDate.get(i)))
-            System.out.println("Mesage");
-        }
-    }
 
 }
 
