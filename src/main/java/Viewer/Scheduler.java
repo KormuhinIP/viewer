@@ -1,14 +1,14 @@
 package Viewer;
 
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import java.util.*;
 
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class Scheduler implements ApplicationListener<ContextRefreshedEvent> {

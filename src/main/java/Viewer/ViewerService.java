@@ -4,8 +4,10 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.springframework.stereotype.Service;
+
 import java.io.IOException;
 import java.util.ArrayList;
+
 
 @Service
 public class ViewerService {
@@ -19,6 +21,7 @@ public class ViewerService {
      public String getDate(String link, String query)  {
         String date="";
          Document document= null;
+
          try {
              document = Jsoup.connect(link).get();
          } catch (IOException e) {
